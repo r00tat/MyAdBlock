@@ -29,7 +29,62 @@
 				<string>at.woelfel.paul.myadblock.menu</string>
 				<key>Menu Items</key>
 				<array>
-					<dict/>
+					<dict>
+						<key>Checked State</key>
+						<real>0.0</real>
+						<key>Command</key>
+						<string>at.woelfel.paul.myadblock.menu.facebook</string>
+						<key>Identifier</key>
+						<string>at.woelfel.paul.myadblock.menu.facebook</string>
+						<key>Title</key>
+						<string>Block Facebook</string>
+					</dict>
+					<dict>
+						<key>Command</key>
+						<string>at.woelfel.paul.myadblock.menu.pause</string>
+						<key>Identifier</key>
+						<string>at.woelfel.paul.myadblock.menu.pause</string>
+						<key>Title</key>
+						<string>Pause MyAdBlock</string>
+					</dict>
+					<dict>
+						<key>Separator</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Command</key>
+						<string>at.woelfel.paul.myadblock.menu.blockdomain</string>
+						<key>Identifier</key>
+						<string>at.woelfel.paul.myadblock.menu.blockdomain</string>
+						<key>Title</key>
+						<string>Block current Domain</string>
+					</dict>
+					<dict>
+						<key>Command</key>
+						<string>at.woelfel.paul.myadblock.menu.blockhost</string>
+						<key>Identifier</key>
+						<string>at.woelfel.paul.myadblock.menu.blockhost</string>
+						<key>Title</key>
+						<string>Block current Host</string>
+					</dict>
+					<dict>
+						<key>Command</key>
+						<string></string>
+						<key>Identifier</key>
+						<string></string>
+						<key>Separator</key>
+						<true/>
+						<key>Title</key>
+						<string></string>
+					</dict>
+					<dict>
+						<key>Command</key>
+						<string>at.woelfel.paul.myadblock.menu.prefs</string>
+						<key>Identifier</key>
+						<string>at.woelfel.paul.myadblock.menu.prefs</string>
+						<key>Title</key>
+						<string>Preferences</string>
+					</dict>
 				</array>
 			</dict>
 		</array>
@@ -50,13 +105,15 @@
 		<array>
 			<dict>
 				<key>Identifier</key>
-				<string>at.woelfel.paul.myadblock.stop</string>
+				<string>at.woelfel.paul.myadblock.button</string>
 				<key>Image</key>
 				<string>Stop.png</string>
 				<key>Label</key>
 				<string>AdBlock</string>
+				<key>Menu</key>
+				<string>at.woelfel.paul.myadblock.menu</string>
 				<key>Popover</key>
-				<string>at.woelfel.paul.myadblock.popover</string>
+				<string></string>
 				<key>Tool Tip</key>
 				<string>MyAdBlock Manager</string>
 			</dict>

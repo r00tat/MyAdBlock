@@ -3,6 +3,7 @@ console.log('global page loaded');
 var debug = false;
 var pckg = "at.woelfel.paul.myadblock";
 var facebookBlocked=false;
+var paused=false;
 
 var REGEX_IDX = 0, DOMAIN_IDX = 1;
 
@@ -38,6 +39,7 @@ if (facebookBlocked == null || facebookBlocked == undefined) {
 	facebookBlocked=true;
 }
 
+var fbBlockDomains=new Array("facebook.com", "fbcdn.net", "facebook.net", "fbshare.me"); 
 
 
 cleanBlockedDomains();
@@ -46,6 +48,9 @@ console.log("regexes to block: " + sitesToBlock[REGEX_IDX]);
 console.log("domains to block: " + sitesToBlock[DOMAIN_IDX]);
 
 function checkBlocked(location) {
+	
+	if(paused === true)
+		return false;
 
 	if (location == null || location == undefined)
 		return false;
@@ -57,14 +62,29 @@ function checkBlocked(location) {
 		return false;
 
 	var domain = location.replace(/^[a-z]+:\/\//ig, "").replace(/\/.*$/ig, '');
+	
+	
+	
 
-	if (domain != null && domain.length > 0)
+	if (domain != null && domain.length > 0){
+		
+		if(facebookBlocked===true){
+			for( var i=0;i<	fbBlockDomains.length;i++){
+				if(domain.indexOf(fbBlockDomains[i]) >= 0){
+					console.log("blocking facebook site");
+					return true;
+				}
+			}
+		}
+		
+		
 		for ( var i = 0; i < sitesToBlock[DOMAIN_IDX].length; i++) {
 			if (domain.indexOf(sitesToBlock[DOMAIN_IDX][i]) >= 0) {
 				console.log("blocking because of domain " + sitesToBlock[DOMAIN_IDX][i] + ":" + location);
 				return true;
 			}
 		}
+	}
 
 	for ( var i = 0; i < sitesToBlock[REGEX_IDX].length; i++) {
 		if (location.match(new RegExp(sitesToBlock[REGEX_IDX][i], "i"))) {
@@ -173,30 +193,93 @@ function handleGlobalMessage(event) {
 }
 safari.application.addEventListener("message", handleGlobalMessage, false);
 
+
+
+function handleCommands(event) {
+	if (event.command.indexOf(pckg) == 0) {
+
+		var name = event.command.replace(pckg + ".", "");
+		
+//		console.log("command "+name +" received");
+		
+		switch(name){
+			case "menu.facebook":
+				facebookBlocked=!facebookBlocked;
+				saveFBBlockingPrefs();
+				console.log("set facebook block to "+ facebookBlocked );
+				
+				
+				break;
+			case "menu.pause":
+				paused=!paused;
+				console.log((paused?"enabled":"disabled")+ " MyAdBlock");
+				
+				
+				break;
+				
+			case "menu.blockdomain":
+				addCurentDomain();
+				break;
+				
+			case "menu.blockhost":
+				addCurentHost();
+				break;
+			
+			case "menu.prefs":
+				openPreferences();
+				break;	
+			
+		}		
+
+	}
+}
+
+safari.application.addEventListener("command", handleCommands, false);
+
+
+
+
+function handleValidate(event){
+	if (event.command.indexOf(pckg) == 0) {
+
+		var name = event.command.replace(pckg + ".", "");
+		
+		switch(name){
+			case "menu.facebook":
+				event.target.checkedState=(facebookBlocked==true? SafariExtensionMenuItem.CHECKED: SafariExtensionMenuItem.UNCHECKED);
+				break;
+			case "menu.pause":
+				event.target.checkedState=(paused==true? SafariExtensionMenuItem.CHECKED: SafariExtensionMenuItem.UNCHECKED);
+				break;
+		}
+	}
+	
+}
+
+
+safari.application.addEventListener("validate", handleValidate, true);
+
+
+
 function openPreferences() {
 	var newTab = safari.application.activeBrowserWindow.openTab();
 	newTab.url = safari.extension.baseURI + "preferences.html";
 	newTab.activate();
 }
 
-function handleCommands(event) {
-	if (event.command === pckg + ".stop") {
-		openPreferences();
-	}
-}
-safari.application.addEventListener("command", handleCommands, false);
+
 
 function savePrefs(data) {
 	if (data instanceof Array && data[0] instanceof Array && data[1] instanceof Array) {
 		sitesToBlock[REGEX_IDX] = data[0];
 		sitesToBlock[DOMAIN_IDX] = data[1];
-		saveBlockedSites();
+		saveBlockingPrefs();
 	}
 }
 
 function addBlockedSiteRegex(regex) {
 	sitesToBlock[REGEX_IDX].push(regex);
-	saveBlockedSites();
+	saveBlockingPrefs();
 }
 
 function removeBlockedSiteRegex(regex) {
@@ -204,7 +287,7 @@ function removeBlockedSiteRegex(regex) {
 	if (idx >= 0) {
 		delete sitesToBlock[REGEX_IDX][idx];
 		sitesToBlock[REGEX_IDX] = sitesToBlock[REGEX_IDX].compact();
-		saveBlockedSites();
+		saveBlockingPrefs();
 		return true;
 	} else {
 		return false;
@@ -213,7 +296,7 @@ function removeBlockedSiteRegex(regex) {
 
 function addBlockedSiteDomain(domain) {
 	sitesToBlock[DOMAIN_IDX].push(domain);
-	saveBlockedSites();
+	saveBlockingPrefs();
 }
 
 function removeBlockedSiteDomain(domain) {
@@ -221,7 +304,7 @@ function removeBlockedSiteDomain(domain) {
 	if (idx >= 0) {
 		delete sitesToBlock[DOMAIN_IDX][idx];
 		sitesToBlock[DOMAIN_IDX] = sitesToBlock[DOMAIN_IDX].compact();
-		saveBlockedSites();
+		saveBlockingPrefs();
 		return true;
 	} else {
 		return false;
@@ -244,11 +327,31 @@ function cleanBlockedDomains() {
 	}
 }
 
-function saveBlockedSites() {
+
+function addCurentDomain() {
+	var tab = safari.application.activeBrowserWindow.activeTab;
+	var domain = tab.url.replace(/^[a-z]+:\/\//ig, "").replace(/\/.*$/ig, '').replace(/^([\w\-]+\.)*([\w\-]+\.[\w\-]+)$/i, '$2');
+	addBlockedSiteDomain(domain);
+	alert( "domain " + domain + " added!");
+}
+
+function addCurentHost() {
+	var tab = safari.application.activeBrowserWindow.activeTab;
+	var domain = tab.url.replace(/^[a-z]+:\/\//ig, "").replace(/\/.*$/ig, '');
+	addBlockedSiteDomain(domain);
+	alert( "host " + domain + " added!");
+}
+
+
+function saveBlockingPrefs() {
 
 	cleanBlockedDomains();
 
 	localStorage.setItem("blockedRegex", JSON.stringify(sitesToBlock[REGEX_IDX]));
 	localStorage.setItem("blockedDomains", JSON.stringify(sitesToBlock[DOMAIN_IDX]));
-	localStorage.setItem("fbBlockEnabled", JSON.stringify(facebookBlockEnabled);
+	saveFBBlockingPrefs();
+}
+
+function saveFBBlockingPrefs(){
+	localStorage.setItem("fbBlockEnabled", JSON.stringify(facebookBlocked));
 }
