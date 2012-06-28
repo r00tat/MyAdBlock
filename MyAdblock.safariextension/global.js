@@ -22,7 +22,7 @@ if (!sitesToBlock[REGEX_IDX] instanceof Array) {
 
 sitesToBlock[DOMAIN_IDX] = localStorage.blockedDomains;
 if (sitesToBlock[DOMAIN_IDX] == null || sitesToBlock[DOMAIN_IDX] == undefined) {
-	sitesToBlock[DOMAIN_IDX] = new Array("ero-advertising.com", "d03x2011.com", "xmatch.com");
+	sitesToBlock[DOMAIN_IDX] = new Array();
 } else {
 	sitesToBlock[DOMAIN_IDX] = JSON.parse(sitesToBlock[DOMAIN_IDX]);
 }
