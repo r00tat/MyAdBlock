@@ -1,0 +1,27 @@
+@CHARSET "UTF-8";
+
+body {
+	font-size: 12px;
+}
+
+
+.link {
+	display:block;
+	margin: 10px;
+}
+
+.link a {
+	display: block;
+}
+
+.spacer {
+	height: 10px;
+}
+
+a,a:link,a:visited,a:hover,a:active,a:focus {
+	color: blue;
+	text-decoration: underline;
+	font: bold;
+	cursor: pointer;
+	cursor: hand;
+}

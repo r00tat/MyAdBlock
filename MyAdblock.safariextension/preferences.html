@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>MyAdBlock Preferences</title>
+<link href="preferences.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="prototype.js"></script>
+<script type="text/javascript">
+var pckg = "at.woelfel.paul.myadblock";
+
+	function loadPrefs() {
+		safari.self.tab.dispatchMessage(pckg+".getPrefs", null);
+	}
+
+	function msgReceiver(event) {
+		if (event.name === pckg+".getPrefsCallback") {
+			console.log("get prefs callback");
+			$('regexToBlock').value = event.message[0].join("\n");
+			$('domainsToBlock').value = event.message[1].join("\n");
+			$('msg').innerHTML = "Prefrences loaded!";
+		} else if (event.name === pckg+".savePrefsCallback") {
+			console.log("save prefs callback");
+			$('msg').innerHTML = event.message;
+		}
+
+	}
+
+	safari.self.addEventListener("message", msgReceiver, false);
+
+	function savePrefs() {
+		safari.self.tab.dispatchMessage(pckg+".savePrefs", new Array(
+				$('regexToBlock').value==""?new Array():$('regexToBlock').value.split("\n"), 
+				($('domainsToBlock').value==""?new Array():$('domainsToBlock').value.split("\n"))));
+	}
+</script>
+</head>
+<body onload="loadPrefs();">
+	<h1>Preferences</h1>
+	<h2>Blocked Sites</h2>
+	<div id="msg"></div>
+	<input type="button" value="reload" onclick="loadPrefs();" />
+	<br />
+	<h3>Regular Expressions to Block</h3>
+	<textarea cols="200" rows="20" id="regexToBlock"></textarea>
+	<br />
+	<h3>Domains to Block</h3>
+	<textarea cols="200" rows="20" id="domainsToBlock"></textarea>
+	<br />
+	<input type="button" value="save" onclick="savePrefs();" />
+</body>
+</html>

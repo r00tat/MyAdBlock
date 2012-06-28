@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>Paul Woelfel</string>
+	<key>Builder Version</key>
+	<string>7534.57.2</string>
+	<key>CFBundleDisplayName</key>
+	<string>MyAdblock</string>
+	<key>CFBundleIdentifier</key>
+	<string>at.woelfel.paul.myadblock</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Database Quota</key>
+		<real>10485760</real>
+		<key>Global Page</key>
+		<string>global.html</string>
+		<key>Menus</key>
+		<array>
+			<dict>
+				<key>Identifier</key>
+				<string>at.woelfel.paul.myadblock.menu</string>
+				<key>Menu Items</key>
+				<array>
+					<dict/>
+				</array>
+			</dict>
+		</array>
+		<key>Popovers</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>popover.html</string>
+				<key>Height</key>
+				<real>160</real>
+				<key>Identifier</key>
+				<string>at.woelfel.paul.myadblock.popover</string>
+				<key>Width</key>
+				<real>200</real>
+			</dict>
+		</array>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Identifier</key>
+				<string>at.woelfel.paul.myadblock.stop</string>
+				<key>Image</key>
+				<string>Stop.png</string>
+				<key>Label</key>
+				<string>AdBlock</string>
+				<key>Popover</key>
+				<string>at.woelfel.paul.myadblock.popover</string>
+				<key>Tool Tip</key>
+				<string>MyAdBlock Manager</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>Start</key>
+			<array>
+				<string>start-block.js</string>
+			</array>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>Simple Ad Blocker, which prevents ads and popups from loading</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

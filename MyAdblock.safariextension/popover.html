@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>MyAdBlock Popover</title>
+<script type="text/javascript">
+	const
+	myGlobal = safari.extension.globalPage.contentWindow;
+
+	function showPrefs() {
+		safari.extension.globalPage.contentWindow.openPreferences();
+
+	}
+
+	function addCurentDomain() {
+		var tab = safari.application.activeBrowserWindow.activeTab;
+		var domain = tab.url.replace(/^[a-z]+:\/\//ig, "").replace(/\/.*$/ig, '').replace(/^([\w\-]+\.)*([\w\-]+\.[\w\-]+)$/i, '$2');
+		myGlobal.addBlockedSiteDomain(domain);
+		alert( "domain " + domain + " added!");
+	}
+
+	function addCurentHost() {
+		var tab = safari.application.activeBrowserWindow.activeTab;
+		var domain = tab.url.replace(/^[a-z]+:\/\//ig, "").replace(/\/.*$/ig, '');
+		myGlobal.addBlockedSiteDomain(domain);
+		alert( "host " + domain + " added!");
+	}
+	
+	function addRegex() {
+		var newData=prompt("regex to add","add regex");
+		if(newData != null && newData != ""){
+			myGlobal.addBlockedSiteRegex(newData);
+			alert( "regular expression " + domain + " added!");
+		}
+	}
+	
+	function addDomain() {
+		var newData=prompt("domain or host to add","example.com");
+		if(newData != null && newData != ""){
+			myGlobal.addBlockedSiteDomain(newData);
+			alert( "host or domain " + domain + " added!");
+		}
+	}
+</script>
+<link href="popover.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div>
+		<div class="link">
+			<a href="#" onclick="addCurentDomain()">block current domain</a>
+		</div>
+		<div class="link"><a href="#" onclick="addCurentHost()">block current host</a></div>
+		<div class="link"><a href="#" onclick="addRegex()">block regular expression</a></div>
+		<div class="link"><a href="#" onclick="addDomain()">block host or domain</a></div>
+
+		<div class="spacer"> </div>
+		<div class="link"><a href="#" onclick="showPrefs();">Preferences</a></div>
+	</div>
+</body>
+</html>
