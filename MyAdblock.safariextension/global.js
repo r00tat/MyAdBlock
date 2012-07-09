@@ -159,7 +159,9 @@ function handleGlobalMessage(event) {
 			}
 			var result = checkBlocked(data);
 
-			event.target.page.dispatchMessage(pckg + ".pageBlockAnswer", result);
+			if(typeof(event.target.page.dispatchMessage)=="object"){
+				event.target.page.dispatchMessage(pckg + ".pageBlockAnswer", result);
+			}
 			break;
 		case "CloseActiveTabRequest":
 			closeActiveTab();
